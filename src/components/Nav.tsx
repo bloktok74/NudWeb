@@ -32,7 +32,7 @@ export default function Nav() {
         <a
           href="#top"
           aria-label="Nudora — home"
-          className="logo-mark text-ink h-7 lg:h-8 w-[140px] lg:w-[160px]"
+          className="logo-mark text-ink h-[34px] lg:h-[38px] w-[168px] lg:w-[192px]"
         />
 
         <nav className="hidden lg:flex items-center gap-10">

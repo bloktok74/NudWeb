@@ -62,7 +62,7 @@ export default function Footer() {
             <a
               href="#top"
               aria-label="Nudora — home"
-              className="logo-mark text-ink h-10 lg:h-12 w-[220px] lg:w-[260px]"
+              className="logo-mark text-ink h-12 lg:h-[58px] w-[264px] lg:w-[312px]"
             />
 
             <p className="mt-6 text-sm text-charcoal/65 leading-[1.8] max-w-sm">

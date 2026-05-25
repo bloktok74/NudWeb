@@ -60,8 +60,8 @@ const slides: Slide[] = [
   { key: 'green', img: '/products/hero-green.png' },
 ];
 
-const ROTATE_MS = 5400;
-const FADE_MS = 2200;
+const ROTATE_MS = 4000;
+const FADE_MS = 1400;
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -77,8 +77,8 @@ export default function Hero() {
     };
   }, [index]);
 
-  // Soft, gentle easing for fades (closer to ease-in-out for slower at the ends)
-  const fadeStyle = { transitionTimingFunction: 'cubic-bezier(0.45, 0, 0.25, 1)' };
+  // Symmetric ease-in-out — slow at both ends, predictable middle.
+  const fadeStyle = { transitionTimingFunction: 'ease-in-out' as const };
 
   const activeKey = slides[index].key;
   // index of the active product *as a product* (0/1/2) for the 3-step legend
@@ -183,10 +183,14 @@ export default function Hero() {
                   return (
                     <div
                       key={i}
-                      className={`absolute inset-0 transition-opacity ${
+                      className={`hero-slide absolute inset-0 transition-opacity ${
                         isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
                       }`}
-                      style={{ ...fadeStyle, transitionDuration: `${FADE_MS}ms` }}
+                      style={{
+                        ...fadeStyle,
+                        transitionDuration: `${FADE_MS}ms`,
+                        willChange: 'opacity',
+                      }}
                       aria-hidden={!isActive}
                     >
                       <img
@@ -194,7 +198,7 @@ export default function Hero() {
                         alt={isActive ? `Nudora ${p.shortLabel}` : ''}
                         loading={i === 0 ? 'eager' : 'lazy'}
                         decoding="async"
-                        className={`absolute inset-0 w-full h-full object-cover ${isActive ? 'ken-burns' : ''}`}
+                        className="absolute inset-0 w-full h-full object-cover ken-burns"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
 
@@ -247,6 +251,7 @@ export default function Hero() {
                       style={{
                         ...fadeStyle,
                         transitionDuration: `${FADE_MS}ms`,
+                        willChange: 'opacity',
                         animationDelay: '-2s',
                       }}
                     >
@@ -274,6 +279,7 @@ export default function Hero() {
                       style={{
                         ...fadeStyle,
                         transitionDuration: `${FADE_MS}ms`,
+                        willChange: 'opacity',
                         animationDelay: '-4s',
                       }}
                     >

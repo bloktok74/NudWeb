@@ -136,4 +136,7 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   .ken-burns, .float-soft, .marquee-track, .grain-fixed { animation: none !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  /* Hero slide crossfade — collapse to a snap so the rotation still
+     advances but motion-sensitive users don't see the long fade. */
+  .hero-slide { transition-duration: 1ms !important; }
 }
