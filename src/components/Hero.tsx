@@ -10,60 +10,58 @@ const marqueeItems = [
   'Made in the USA',
 ];
 
-type HeroProduct = {
-  key: 'orange' | 'purple' | 'green';
-  label: string;          // card top eyebrow
-  shortLabel: string;     // mini-pill title
-  step: string;           // 'Metabolism' | 'Sleep · Mood' | 'Gut'
+type ProductKey = 'orange' | 'purple' | 'green';
+
+type ProductMeta = {
+  label: string;
+  shortLabel: string;
+  step: string;
   dot: string;
-  tagline: string;        // card bottom italic
-  benefit: string;        // mini-pill bottom sub
-  benefitAlt: string;     // secondary mini-pill sub
-  img: string;
-  alt: string;
+  tagline: string;
+  benefit: string;
 };
 
-const heroProducts: HeroProduct[] = [
-  {
-    key: 'orange',
+const products: Record<ProductKey, ProductMeta> = {
+  orange: {
     label: 'Orange · Metabolism',
     shortLabel: 'Orange',
     step: 'Metabolism',
     dot: 'dot-citrus',
     tagline: 'Fuel your rhythm.',
     benefit: 'Burn cleaner',
-    benefitAlt: 'Energy without the crash',
-    img: '/products/hero-orange.png',
-    alt: 'Nudora Orange 2.0 — Metabolism & Energy',
   },
-  {
-    key: 'purple',
+  purple: {
     label: 'Purple · Sleep · Mood',
     shortLabel: 'Purple',
     step: 'Sleep · Mood',
     dot: 'dot-lavender',
     tagline: 'Rest deeper. Reset better.',
     benefit: 'Sleep deeper',
-    benefitAlt: 'Calm without sedation',
-    img: '/products/hero-purple.png',
-    alt: 'Nudora Purple — Sleep & Mood Support',
   },
-  {
-    key: 'green',
+  green: {
     label: 'Green · Gut',
     shortLabel: 'Green',
     step: 'Gut',
     dot: 'dot-sage',
     tagline: 'Feel lighter from within.',
     benefit: 'Less bloat',
-    benefitAlt: 'Gentle daily rhythm',
-    img: '/products/hero-green.png',
-    alt: 'Nudora Green — Daily Gut Support',
   },
+};
+
+type Slide = { key: ProductKey; img: string };
+
+// Interleaved so the viewer sees all 3 products before any repeat
+const slides: Slide[] = [
+  { key: 'orange', img: '/products/hero-orange.png' },
+  { key: 'purple', img: '/products/hero-purple.png' },
+  { key: 'green', img: '/products/hero-green-frost.png' },
+  { key: 'orange', img: '/products/hero-orange-2.png' },
+  { key: 'purple', img: '/products/purple-2.png' },
+  { key: 'green', img: '/products/hero-green.png' },
 ];
 
-const ROTATE_MS = 5500;
-const FADE_MS = 1400;
+const ROTATE_MS = 5400;
+const FADE_MS = 2200;
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -72,14 +70,19 @@ export default function Hero() {
   useEffect(() => {
     if (timerRef.current) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
-      setIndex((i) => (i + 1) % heroProducts.length);
+      setIndex((i) => (i + 1) % slides.length);
     }, ROTATE_MS);
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
   }, [index]);
 
-  const fadeStyle = { transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' };
+  // Soft, gentle easing for fades (closer to ease-in-out for slower at the ends)
+  const fadeStyle = { transitionTimingFunction: 'cubic-bezier(0.45, 0, 0.25, 1)' };
+
+  const activeKey = slides[index].key;
+  // index of the active product *as a product* (0/1/2) for the 3-step legend
+  const productIndex = (['orange', 'purple', 'green'] as ProductKey[]).indexOf(activeKey);
 
   return (
     <section
@@ -135,21 +138,25 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* 3-step legend — clickable, active highlighted */}
+            {/* 3-step legend — clickable, jumps to that product's first slide */}
             <div className="reveal reveal-delay-4 mt-12 lg:mt-16 grid grid-cols-3 gap-4 lg:gap-6 max-w-lg">
-              {heroProducts.map((p, i) => {
-                const isActive = i === index;
+              {(['orange', 'purple', 'green'] as ProductKey[]).map((k, i) => {
+                const p = products[k];
+                const isActive = i === productIndex;
                 return (
                   <button
-                    key={p.key}
+                    key={k}
                     type="button"
-                    onClick={() => setIndex(i)}
+                    onClick={() => {
+                      const firstSlide = slides.findIndex((s) => s.key === k);
+                      if (firstSlide >= 0) setIndex(firstSlide);
+                    }}
                     aria-label={`Show ${p.shortLabel}`}
                     className="text-left flex flex-col gap-2 group"
                   >
                     <span className={`dot ${p.dot}`} aria-hidden />
                     <span
-                      className={`font-display text-lg leading-tight transition-colors duration-500 ${
+                      className={`font-display text-lg leading-tight transition-colors duration-700 ${
                         isActive ? 'text-ink' : 'text-ink/55 group-hover:text-ink'
                       }`}
                     >
@@ -168,13 +175,14 @@ export default function Hero() {
               {/* Glow disc */}
               <div className="absolute inset-6 rounded-full bg-gradient-to-br from-champagne/30 via-cream to-citrus-soft blur-2xl opacity-80" />
 
-              {/* Product card — each product is a full-bleed layer that crossfades together */}
+              {/* Product card — each slide is a full-bleed layer that crossfades */}
               <div className="relative h-full w-full rounded-[28px] overflow-hidden border border-charcoal/10 bg-cream shadow-[0_40px_80px_-40px_rgba(26,22,18,0.28)]">
-                {heroProducts.map((p, i) => {
+                {slides.map((slide, i) => {
+                  const p = products[slide.key];
                   const isActive = i === index;
                   return (
                     <div
-                      key={p.key}
+                      key={i}
                       className={`absolute inset-0 transition-opacity ${
                         isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
                       }`}
@@ -182,8 +190,8 @@ export default function Hero() {
                       aria-hidden={!isActive}
                     >
                       <img
-                        src={p.img}
-                        alt={isActive ? p.alt : ''}
+                        src={slide.img}
+                        alt={isActive ? `Nudora ${p.shortLabel}` : ''}
                         loading={i === 0 ? 'eager' : 'lazy'}
                         decoding="async"
                         className={`absolute inset-0 w-full h-full object-cover ${isActive ? 'ken-burns' : ''}`}
@@ -197,7 +205,7 @@ export default function Hero() {
                           {p.label}
                         </span>
                         <span className="eyebrow !text-cream/85 tabular-nums">
-                          0{i + 1} / 0{heroProducts.length}
+                          {String(i + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
                         </span>
                       </div>
 
@@ -224,14 +232,14 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Floating mini-pills — each is a stack of 3 product states; active one fades in.
-                  Both pills now follow the CURRENT product, with different facets. */}
+              {/* Floating mini-pills — follow the active product */}
               <div className="hidden md:block absolute -left-10 top-1/4 w-[200px] h-[64px]">
-                {heroProducts.map((p, i) => {
-                  const isActive = i === index;
+                {(['orange', 'purple', 'green'] as ProductKey[]).map((k) => {
+                  const p = products[k];
+                  const isActive = k === activeKey;
                   return (
                     <div
-                      key={p.key}
+                      key={k}
                       aria-hidden={!isActive}
                       className={`absolute inset-0 card px-4 py-3 flex items-center gap-3 transition-opacity ${
                         isActive ? 'opacity-100 float-soft' : 'opacity-0 pointer-events-none'
@@ -253,11 +261,12 @@ export default function Hero() {
               </div>
 
               <div className="hidden md:block absolute -right-6 bottom-1/4 w-[210px] h-[64px]">
-                {heroProducts.map((p, i) => {
-                  const isActive = i === index;
+                {(['orange', 'purple', 'green'] as ProductKey[]).map((k) => {
+                  const p = products[k];
+                  const isActive = k === activeKey;
                   return (
                     <div
-                      key={p.key}
+                      key={k}
                       aria-hidden={!isActive}
                       className={`absolute inset-0 card px-4 py-3 flex items-center gap-3 transition-opacity ${
                         isActive ? 'opacity-100 float-soft' : 'opacity-0 pointer-events-none'
