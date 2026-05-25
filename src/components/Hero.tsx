@@ -12,49 +12,58 @@ const marqueeItems = [
 
 type HeroProduct = {
   key: 'orange' | 'purple' | 'green';
-  label: string;
+  label: string;          // card top eyebrow
+  shortLabel: string;     // mini-pill title
+  step: string;           // 'Metabolism' | 'Sleep · Mood' | 'Gut'
   dot: string;
-  tagline: string;
+  tagline: string;        // card bottom italic
+  benefit: string;        // mini-pill bottom sub
+  benefitAlt: string;     // secondary mini-pill sub
   img: string;
   alt: string;
-  miniLabel: string;
-  miniSub: string;
 };
 
 const heroProducts: HeroProduct[] = [
   {
     key: 'orange',
     label: 'Orange · Metabolism',
+    shortLabel: 'Orange',
+    step: 'Metabolism',
     dot: 'dot-citrus',
     tagline: 'Fuel your rhythm.',
+    benefit: 'Burn cleaner',
+    benefitAlt: 'Energy without the crash',
     img: '/products/hero-orange.png',
     alt: 'Nudora Orange 2.0 — Metabolism & Energy',
-    miniLabel: 'Orange',
-    miniSub: 'Burn cleaner',
   },
   {
     key: 'purple',
     label: 'Purple · Sleep · Mood',
+    shortLabel: 'Purple',
+    step: 'Sleep · Mood',
     dot: 'dot-lavender',
     tagline: 'Rest deeper. Reset better.',
+    benefit: 'Sleep deeper',
+    benefitAlt: 'Calm without sedation',
     img: '/products/hero-purple.png',
     alt: 'Nudora Purple — Sleep & Mood Support',
-    miniLabel: 'Purple',
-    miniSub: 'Sleep deeper',
   },
   {
     key: 'green',
     label: 'Green · Gut',
+    shortLabel: 'Green',
+    step: 'Gut',
     dot: 'dot-sage',
     tagline: 'Feel lighter from within.',
+    benefit: 'Less bloat',
+    benefitAlt: 'Gentle daily rhythm',
     img: '/products/hero-green.png',
     alt: 'Nudora Green — Daily Gut Support',
-    miniLabel: 'Green',
-    miniSub: 'Less bloat',
   },
 ];
 
 const ROTATE_MS = 5500;
+const FADE_MS = 1400;
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -70,9 +79,7 @@ export default function Hero() {
     };
   }, [index]);
 
-  const active = heroProducts[index];
-  // floating cards: the other two products, in stable order
-  const others = heroProducts.filter((_, i) => i !== index);
+  const fadeStyle = { transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' };
 
   return (
     <section
@@ -128,7 +135,7 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* 3-step legend — current active highlighted */}
+            {/* 3-step legend — clickable, active highlighted */}
             <div className="reveal reveal-delay-4 mt-12 lg:mt-16 grid grid-cols-3 gap-4 lg:gap-6 max-w-lg">
               {heroProducts.map((p, i) => {
                 const isActive = i === index;
@@ -137,7 +144,7 @@ export default function Hero() {
                     key={p.key}
                     type="button"
                     onClick={() => setIndex(i)}
-                    aria-label={`Show ${p.miniLabel}`}
+                    aria-label={`Show ${p.shortLabel}`}
                     className="text-left flex flex-col gap-2 group"
                   >
                     <span className={`dot ${p.dot}`} aria-hidden />
@@ -146,11 +153,9 @@ export default function Hero() {
                         isActive ? 'text-ink' : 'text-ink/55 group-hover:text-ink'
                       }`}
                     >
-                      {p.miniLabel}
+                      {p.shortLabel}
                     </span>
-                    <span className="eyebrow !text-[10px]">
-                      {p.key === 'orange' ? 'Metabolism' : p.key === 'purple' ? 'Sleep · Mood' : 'Gut'}
-                    </span>
+                    <span className="eyebrow !text-[10px]">{p.step}</span>
                   </button>
                 );
               })}
@@ -163,82 +168,114 @@ export default function Hero() {
               {/* Glow disc */}
               <div className="absolute inset-6 rounded-full bg-gradient-to-br from-champagne/30 via-cream to-citrus-soft blur-2xl opacity-80" />
 
-              {/* Product card */}
+              {/* Product card — each product is a full-bleed layer that crossfades together */}
               <div className="relative h-full w-full rounded-[28px] overflow-hidden border border-charcoal/10 bg-cream shadow-[0_40px_80px_-40px_rgba(26,22,18,0.28)]">
-                {/* Layered images — crossfade */}
-                {heroProducts.map((p, i) => (
-                  <img
-                    key={p.key}
-                    src={p.img}
-                    alt={i === index ? p.alt : ''}
-                    aria-hidden={i !== index}
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                    decoding="async"
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1400ms] ${
-                      i === index ? 'opacity-100 ken-burns' : 'opacity-0'
-                    }`}
-                    style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }}
-                  />
-                ))}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
+                {heroProducts.map((p, i) => {
+                  const isActive = i === index;
+                  return (
+                    <div
+                      key={p.key}
+                      className={`absolute inset-0 transition-opacity ${
+                        isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                      }`}
+                      style={{ ...fadeStyle, transitionDuration: `${FADE_MS}ms` }}
+                      aria-hidden={!isActive}
+                    >
+                      <img
+                        src={p.img}
+                        alt={isActive ? p.alt : ''}
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        className={`absolute inset-0 w-full h-full object-cover ${isActive ? 'ken-burns' : ''}`}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
 
-                {/* Top label + step counter */}
-                <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
-                  <span
-                    key={`label-${active.key}`}
-                    className="eyebrow !text-cream/95 flex items-center gap-2 reveal in"
-                  >
-                    <span className={`dot ${active.dot}`} aria-hidden />
-                    {active.label}
-                  </span>
-                  <span className="eyebrow !text-cream/85 tabular-nums">
-                    0{index + 1} / 0{heroProducts.length}
-                  </span>
-                </div>
+                      {/* Top label */}
+                      <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
+                        <span className="eyebrow !text-cream/95 flex items-center gap-2">
+                          <span className={`dot ${p.dot}`} aria-hidden />
+                          {p.label}
+                        </span>
+                        <span className="eyebrow !text-cream/85 tabular-nums">
+                          0{i + 1} / 0{heroProducts.length}
+                        </span>
+                      </div>
 
-                {/* Bottom tagline + price */}
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4">
-                  <span
-                    key={`tag-${active.key}`}
-                    className="font-display italic text-cream text-2xl leading-tight reveal in"
-                  >
-                    {active.tagline}
-                  </span>
-                  <span className="eyebrow !text-cream/90 whitespace-nowrap">From $64.99</span>
-                </div>
+                      {/* Bottom tagline + price */}
+                      <div className="absolute bottom-7 left-5 right-5 flex items-end justify-between gap-4">
+                        <span className="font-display italic text-cream text-2xl leading-tight">
+                          {p.tagline}
+                        </span>
+                        <span className="eyebrow !text-cream/90 whitespace-nowrap">
+                          From $64.99
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
 
-                {/* Progress bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-cream/20">
+                {/* Progress bar — restarts each rotation */}
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-cream/20 overflow-hidden">
                   <div
                     key={`bar-${index}`}
-                    className="h-full bg-champagne"
+                    className="h-full bg-champagne origin-left"
                     style={{ animation: `hero-bar ${ROTATE_MS}ms linear forwards` }}
                   />
                 </div>
               </div>
 
-              {/* Floating mini-cards — show the two NOT in the hero */}
-              <div
-                key={`mini-top-${others[0].key}`}
-                className="hidden md:flex absolute -left-10 top-1/4 card px-4 py-3 items-center gap-3 float-soft"
-                style={{ animationDelay: '-2s' }}
-              >
-                <span className={`dot ${others[0].dot}`} />
-                <div className="leading-tight">
-                  <div className="font-display text-base text-ink">{others[0].miniLabel}</div>
-                  <div className="eyebrow !text-[9px]">{others[0].miniSub}</div>
-                </div>
+              {/* Floating mini-pills — each is a stack of 3 product states; active one fades in.
+                  Both pills now follow the CURRENT product, with different facets. */}
+              <div className="hidden md:block absolute -left-10 top-1/4 w-[200px] h-[64px]">
+                {heroProducts.map((p, i) => {
+                  const isActive = i === index;
+                  return (
+                    <div
+                      key={p.key}
+                      aria-hidden={!isActive}
+                      className={`absolute inset-0 card px-4 py-3 flex items-center gap-3 transition-opacity ${
+                        isActive ? 'opacity-100 float-soft' : 'opacity-0 pointer-events-none'
+                      }`}
+                      style={{
+                        ...fadeStyle,
+                        transitionDuration: `${FADE_MS}ms`,
+                        animationDelay: '-2s',
+                      }}
+                    >
+                      <span className={`dot ${p.dot}`} />
+                      <div className="leading-tight">
+                        <div className="font-display text-base text-ink">{p.shortLabel}</div>
+                        <div className="eyebrow !text-[9px]">{p.step}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div
-                key={`mini-bot-${others[1].key}`}
-                className="hidden md:flex absolute -right-6 bottom-1/4 card px-4 py-3 items-center gap-3 float-soft"
-                style={{ animationDelay: '-4s' }}
-              >
-                <span className={`dot ${others[1].dot}`} />
-                <div className="leading-tight">
-                  <div className="font-display text-base text-ink">{others[1].miniLabel}</div>
-                  <div className="eyebrow !text-[9px]">{others[1].miniSub}</div>
-                </div>
+
+              <div className="hidden md:block absolute -right-6 bottom-1/4 w-[210px] h-[64px]">
+                {heroProducts.map((p, i) => {
+                  const isActive = i === index;
+                  return (
+                    <div
+                      key={p.key}
+                      aria-hidden={!isActive}
+                      className={`absolute inset-0 card px-4 py-3 flex items-center gap-3 transition-opacity ${
+                        isActive ? 'opacity-100 float-soft' : 'opacity-0 pointer-events-none'
+                      }`}
+                      style={{
+                        ...fadeStyle,
+                        transitionDuration: `${FADE_MS}ms`,
+                        animationDelay: '-4s',
+                      }}
+                    >
+                      <span className={`dot ${p.dot}`} />
+                      <div className="leading-tight">
+                        <div className="font-display text-base text-ink">{p.shortLabel}</div>
+                        <div className="eyebrow !text-[9px]">{p.benefit}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -259,8 +296,8 @@ export default function Hero() {
 
       <style>{`
         @keyframes hero-bar {
-          from { transform: scaleX(0); transform-origin: left; }
-          to { transform: scaleX(1); transform-origin: left; }
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
         }
       `}</style>
     </section>
