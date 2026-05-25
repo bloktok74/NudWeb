@@ -17,7 +17,7 @@ const faqs: QA[] = [
   },
   {
     q: 'Can Nudora help me lose belly fat?',
-    a: 'Orange supports GLP-1 activation, healthy metabolism, and natural fat burning — without starving yourself. Pair with a sensible routine for best results.',
+    a: 'Orange is designed to support GLP-1 activation, healthy metabolism, and natural fat-burning pathways — without shame language. Pair it with a sensible routine for best results.',
   },
   {
     q: 'Will this help my anxiety and sleep issues?',
@@ -53,26 +53,30 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="relative bg-charcoal py-24 lg:py-44 px-6 lg:px-10">
-      <div className="max-w-content mx-auto grid grid-cols-12 gap-y-12 lg:gap-x-10">
+    <section className="relative bg-limestone py-24 lg:py-36 px-6 lg:px-10">
+      <div className="max-w-content mx-auto grid grid-cols-12 gap-y-12 lg:gap-x-14">
         <div className="col-span-12 lg:col-span-4">
-          <span className="reveal block text-[11px] uppercase tracking-[0.32em] text-ash mb-6">
-            07 — Questions
+          <span className="reveal eyebrow flex items-center gap-3 mb-6">
+            <span className="dot dot-champagne" aria-hidden /> 07 — Questions
           </span>
           <h2
-            className="reveal reveal-delay-1 font-display uppercase leading-[0.86] tracking-[-0.01em]"
-            style={{ fontSize: 'clamp(40px, 5.5vw, 96px)' }}
+            className="reveal reveal-delay-1 font-display text-ink leading-[1.0] tracking-[-0.02em]"
+            style={{ fontSize: 'clamp(40px, 5.5vw, 84px)', fontWeight: 400 }}
           >
             The
             <br />
-            <span className="text-sand">Real</span>
+            <span className="italic text-champagne">real</span>
             <br />
-            Answers.
+            answers.
           </h2>
-          <p className="reveal reveal-delay-2 mt-10 text-base text-bone/60 leading-[1.7] max-w-sm">
+          <p className="reveal reveal-delay-2 mt-10 text-base text-charcoal/65 leading-[1.7] max-w-sm">
             Pharmacist-developed answers to the questions we hear most. Still
             stuck? Reach out — we're a small family team.
           </p>
+          <a href="#contact" className="reveal reveal-delay-3 btn btn-ghost mt-10">
+            Talk To Us
+            <span aria-hidden>→</span>
+          </a>
         </div>
 
         <div className="col-span-12 lg:col-span-8">
@@ -88,16 +92,16 @@ export default function FAQ() {
                     onClick={() => setOpen(isOpen ? null : i)}
                   >
                     <span className="flex items-baseline gap-6">
-                      <span className="font-display text-bone/40 text-sm tabular-nums">
+                      <span className="font-display text-charcoal/40 text-sm tabular-nums">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-lg lg:text-2xl font-display uppercase leading-snug tracking-tight">
+                      <span className="text-lg lg:text-2xl font-display text-ink leading-snug tracking-tight">
                         {f.q}
                       </span>
                     </span>
                     <span
                       aria-hidden
-                      className="text-bone/70 text-xl transition-transform duration-700"
+                      className="text-charcoal/60 text-xl transition-transform duration-700"
                       style={{
                         transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
                         transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
@@ -107,7 +111,7 @@ export default function FAQ() {
                     </span>
                   </button>
                   <div className={`acc-panel ${isOpen ? 'open' : ''}`}>
-                    <p className="pl-12 max-w-2xl text-base text-bone/70 leading-[1.8]">
+                    <p className="pl-12 max-w-2xl text-base text-charcoal/75 leading-[1.8]">
                       {f.a}
                     </p>
                   </div>

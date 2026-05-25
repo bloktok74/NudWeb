@@ -3,58 +3,68 @@ type Result = {
   headline: string;
   body: string;
   cta: string;
+  tone: 'sage' | 'citrus' | 'lavender';
   icon: 'lighter' | 'calm' | 'rested' | 'glowing' | 'naturally' | 'strong';
 };
 
 const results: Result[] = [
   {
     label: 'Lighter',
-    headline: 'Bloat Be Gone, Confidence Back',
-    body: 'Wake up with a flat belly — no more tight jeans or sucking in. Feel light and free, every single day.',
+    headline: 'Bloat be gone, confidence back.',
+    body: 'Wake up with a flat belly — no more tight jeans or sucking in. Feel light and free, every day.',
     cta: 'Try Nudora Orange',
+    tone: 'citrus',
     icon: 'lighter',
   },
   {
     label: 'Calm',
-    headline: 'Goodbye Anxiety, Hello Calm',
-    body: 'Take back control. No racing thoughts — just calm, clarity, and confidence to handle anything life brings.',
+    headline: 'Goodbye anxiety, hello calm.',
+    body: 'Take back control. No racing thoughts — just calm, clarity, and confidence to handle anything.',
     cta: 'Try Nudora Purple',
+    tone: 'lavender',
     icon: 'calm',
   },
   {
     label: 'Rested',
-    headline: 'Finally, Deep Restful Sleep',
-    body: 'No more tossing, turning, or waking up exhausted. Wake up energized, ready to crush your day.',
+    headline: 'Finally, deep restful sleep.',
+    body: 'No more tossing or turning. Wake up energized, ready to take on the day.',
     cta: 'Try Nudora Purple',
+    tone: 'lavender',
     icon: 'rested',
   },
   {
     label: 'Glowing',
-    headline: 'Clear Skin from the Inside Out',
+    headline: 'Clear skin from the inside out.',
     body: 'Say goodbye to breakouts and dull skin. Heal your gut, and your skin glows — naturally.',
     cta: 'Try Nudora Orange',
+    tone: 'citrus',
     icon: 'glowing',
   },
   {
     label: 'Naturally',
-    headline: 'Digestion That Just Works',
+    headline: 'Digestion that just works.',
     body: 'No more cramps, gas, or emergency bathroom runs. Eat what you love, feel good after.',
     cta: 'Try Nudora Green',
+    tone: 'sage',
     icon: 'naturally',
   },
   {
     label: 'Strong',
-    headline: 'Burn Fat, Feel Powerful',
-    body: 'Fire up your metabolism. Ditch the sluggish feeling. Move, sweat, and feel unstoppable — without starving yourself.',
+    headline: 'Burn fat, feel powerful.',
+    body: 'Support a steady metabolism. Move, sweat, and feel unstoppable — without starving yourself.',
     cta: 'Try Nudora Orange',
+    tone: 'citrus',
     icon: 'strong',
   },
 ];
 
+const dotMap = { sage: 'dot-sage', citrus: 'dot-citrus', lavender: 'dot-lavender' };
+const tintMap = { sage: 'tint-sage', citrus: 'tint-citrus', lavender: 'tint-lavender' };
+
 function Icon({ kind }: { kind: Result['icon'] }) {
   const common = {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     viewBox: '0 0 44 44',
     fill: 'none',
     stroke: 'currentColor',
@@ -110,61 +120,62 @@ function Icon({ kind }: { kind: Result['icon'] }) {
 
 export default function ResultsCards() {
   return (
-    <section className="relative bg-ink py-24 lg:py-44 px-6 lg:px-10">
+    <section className="relative bg-cream py-24 lg:py-36 px-6 lg:px-10">
       <div className="max-w-content mx-auto">
-        <div className="grid grid-cols-12 gap-y-10 lg:gap-x-10 mb-16 lg:mb-24">
-          <div className="col-span-12 lg:col-span-3">
-            <span className="reveal block text-[11px] uppercase tracking-[0.32em] text-ash">
-              06 — Results
+        <div className="grid grid-cols-12 gap-y-10 lg:gap-x-10 mb-14 lg:mb-20">
+          <div className="col-span-12 lg:col-span-4">
+            <span className="reveal eyebrow flex items-center gap-3">
+              <span className="dot dot-champagne" aria-hidden /> 06 — Results
             </span>
           </div>
-          <div className="col-span-12 lg:col-span-9">
+          <div className="col-span-12 lg:col-span-8">
             <h2
-              className="reveal font-display uppercase leading-[0.86] tracking-[-0.01em]"
-              style={{ fontSize: 'clamp(40px, 6.5vw, 112px)' }}
+              className="reveal font-display text-ink leading-[1.0] tracking-[-0.02em]"
+              style={{ fontSize: 'clamp(40px, 6vw, 96px)', fontWeight: 400 }}
             >
-              The Way You're
+              The way you're
               <br />
-              <span className="text-bone/40">Meant</span> To Feel.
+              <span className="italic text-champagne">meant</span> to feel.
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-bone/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {results.map((r, i) => (
             <article
               key={r.label}
-              className="svc-card reveal p-8 lg:p-10 flex flex-col gap-8 min-h-[420px]"
-              style={{ transitionDelay: `${(i % 3) * 0.12}s` }}
+              className="card reveal flex flex-col"
+              style={{ transitionDelay: `${(i % 3) * 0.10}s` }}
             >
-              <div className="flex items-start justify-between">
-                <span className="svc-text text-bone/80">
+              <div className={`${tintMap[r.tone]} p-8 lg:p-10 flex items-start justify-between`}>
+                <span className="text-ink/85">
                   <Icon kind={r.icon} />
                 </span>
-                <span className="svc-eyebrow text-[10px] uppercase tracking-[0.32em] text-ash tabular-nums">
-                  0{i + 1} / 06
-                </span>
+                <span className="eyebrow !text-[10px] tabular-nums">0{i + 1} / 06</span>
               </div>
 
-              <span className="svc-eyebrow text-[11px] uppercase tracking-[0.32em] text-sand">
-                {r.label}
-              </span>
+              <div className="p-8 lg:p-10 flex flex-col gap-5 flex-1">
+                <div className="flex items-center gap-3">
+                  <span className={`dot ${dotMap[r.tone]}`} aria-hidden />
+                  <span className="eyebrow">{r.label}</span>
+                </div>
 
-              <h3 className="svc-title font-display uppercase leading-[0.92] tracking-tight text-3xl lg:text-4xl">
-                {r.headline}
-              </h3>
+                <h3 className="font-display text-2xl lg:text-3xl text-ink leading-[1.1] tracking-tight">
+                  {r.headline}
+                </h3>
 
-              <p className="svc-text text-sm lg:text-base text-bone/65 leading-[1.7] flex-1">
-                {r.body}
-              </p>
+                <p className="text-sm lg:text-base text-charcoal/70 leading-[1.7] flex-1">
+                  {r.body}
+                </p>
 
-              <a
-                href="#shop"
-                className="svc-text mt-auto inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-bone"
-              >
-                {r.cta}
-                <span aria-hidden>→</span>
-              </a>
+                <a
+                  href="#shop"
+                  className="mt-auto inline-flex items-center gap-3 eyebrow !text-ink hover:!text-champagne transition-colors duration-500"
+                >
+                  {r.cta}
+                  <span aria-hidden>→</span>
+                </a>
+              </div>
             </article>
           ))}
         </div>
