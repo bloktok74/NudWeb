@@ -29,9 +29,12 @@ export default function Nav() {
       style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }}
     >
       <div className="max-w-content mx-auto px-6 lg:px-10 h-16 lg:h-20 flex items-center justify-between">
-        <a href="#top" className="font-display text-2xl lg:text-3xl tracking-tight text-ink lowercase italic">
-          nudora<span className="text-champagne">.</span>
-        </a>
+        <a
+          href="#top"
+          aria-label="Nudora — home"
+          className="logo-mark text-ink h-7 lg:h-8 w-[140px] lg:w-[160px]"
+        />
+
         <nav className="hidden lg:flex items-center gap-10">
           {links.map((l) => (
             <a

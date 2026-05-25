@@ -111,6 +111,20 @@ html, body {
   transition: max-height .8s cubic-bezier(0.22,1,0.36,1), opacity .55s cubic-bezier(0.22,1,0.36,1); }
 .acc-panel.open { max-height: 360px; opacity:1; padding-bottom: 28px; }
 
+/* Logo mark — uses the white wordmark PNG as a mask, fills with any color */
+.logo-mark {
+  display: inline-block;
+  -webkit-mask-image: url('/logo-white.png');
+  mask-image: url('/logo-white.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  background: currentColor;
+}
+
 /* Dot system (color-coded) */
 .dot { display:inline-block; width: 8px; height: 8px; border-radius: 999px; }
 .dot-sage { background: #7FA67E; box-shadow: 0 0 0 4px rgba(127,166,126,0.18); }

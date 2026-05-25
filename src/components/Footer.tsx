@@ -1,7 +1,7 @@
 const cols = [
   {
     title: 'Shop',
-    links: ['The 3-Step System', 'Orange 2.0', 'Purple', 'Green', 'Bundles'],
+    links: ['Nudora Green', 'Nudora Orange 2.0', 'Nudora Purple', 'The 3-Step System'],
   },
   {
     title: 'Learn',
@@ -59,9 +59,12 @@ export default function Footer() {
       <div className="px-6 lg:px-10 py-20 lg:py-28">
         <div className="max-w-content mx-auto grid grid-cols-12 gap-y-14 lg:gap-x-10">
           <div className="col-span-12 lg:col-span-4">
-            <a href="#top" className="font-display text-4xl lg:text-5xl text-ink lowercase italic tracking-tight">
-              nudora<span className="text-champagne">.</span>
-            </a>
+            <a
+              href="#top"
+              aria-label="Nudora — home"
+              className="logo-mark text-ink h-10 lg:h-12 w-[220px] lg:w-[260px]"
+            />
+
             <p className="mt-6 text-sm text-charcoal/65 leading-[1.8] max-w-sm">
               A clean, color-coded wellness system designed to support gut
               health, metabolism, sleep, and mood — without supplement
